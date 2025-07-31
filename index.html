@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - ESG Analyzer</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for Inter - if not loaded by default, Tailwind will use sans-serif */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Subtle gradient background */
+            background: linear-gradient(to bottom right, #e0e7ff, #c7d2fe); /* Light blue to lavender gradient */
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white shadow-lg rounded-xl p-8 sm:p-10 lg:p-12 max-w-md w-full text-center transform transition-transform duration-300 hover:scale-105">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">EcoTrack ESG Analyzer</h1>
+        <p class="text-lg text-gray-600 mb-8">Start by entering a business to assess its ESG alignment.</p>
+
+        <div class="mb-6">
+            <input
+                type="text"
+                placeholder="Enter SME name..."
+                class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg transition-shadow duration-200 focus:shadow-lg"
+            >
+        </div>
+
+        <button class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 text-xl transform hover:-translate-y-1">
+            Analyze ESG
+        </button>
+    </div>
+
+</body>
+</html>
