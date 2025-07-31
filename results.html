@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - ESG Results</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for Inter - if not loaded by default, Tailwind will use sans-serif */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        /* Custom styles for score badges based on score range */
+        .score-badge-green {
+            background-color: #10b981; /* Tailwind green-500 */
+        }
+        .score-badge-yellow {
+            background-color: #f59e0b; /* Tailwind yellow-500 */
+        }
+        .score-badge-red {
+            background-color: #ef4444; /* Tailwind red-500 */
+        }
+
+        /* Hide trash icon by default, show on parent hover */
+        .source-card .trash-icon {
+            display: none;
+        }
+        .source-card:hover .trash-icon {
+            display: block;
+        }
+
+        /* Show score breakdown by default, hide on parent hover */
+        .source-card .score-breakdown {
+            display: flex;
+            flex-direction: column; /* Stack vertically if multiple scores */
+            align-items: flex-end; /* Align scores to the right */
+            margin-left: 1rem; /* Spacing from source content */
+        }
+        .source-card:hover .score-breakdown {
+            display: none;
+        }
+
+        /* Progress bar colors */
+        .progress-bar-green {
+            background-color: #22c55e; /* Tailwind green-500 */
+        }
+        .progress-bar-yellow {
+            background-color: #facc15; /* Tailwind yellow-400 */
+        }
+        .progress-bar-red {
+            background-color: #ef4444; /* Tailwind red-500 */
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+
+        <!-- Hero Section -->
+        <header class="bg-white shadow-lg rounded-xl p-6 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2 sm:mb-0">GreenGrow Agri Supply</h1>
+                <div class="flex items-center space-x-2">
+                    <span class="text-lg font-semibold text-gray-600">ESG Total Score:</span>
+                    <!-- Score Badge - dynamically change color based on score -->
+                    <!-- Example: 78/100 -> Green (70-100), 55/100 -> Yellow (40-69), 30/100 -> Red (0-39) -->
+                    <span class="px-4 py-2 rounded-full text-white font-bold text-xl score-badge-green">
+                        78/100
+                    </span>
+                </div>
+            </div>
+
+            <!-- Individual Score Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Environmental Score Card - Always first -->
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
+                    <div class="text-green-600 mb-3">
+                        <!-- Environmental Icon (Leaf) -->
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">Environmental</h3>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="px-3 py-1 rounded-full text-white font-bold text-lg score-badge-green">
+                            85/100
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                        <div class="progress-bar-green h-2.5 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Strong performance in sustainable practices and resource management.</p>
+                </div>
+
+                <!-- Social Score Card - Always second -->
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
+                    <div class="text-blue-600 mb-3">
+                        <!-- Social Icon (People) -->
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-5v-2a3 3 0 013-3h2a3 3 0 013 3v2h-5zm-3-12a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.558 0-2.887.893-3.568 2.193M20 10a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">Social</h3>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="px-3 py-1 rounded-full text-white font-bold text-lg score-badge-yellow">
+                            70/100
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                        <div class="progress-bar-yellow h-2.5 rounded-full" style="width: 70%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Good employee relations and community engagement.</p>
+                </div>
+
+                <!-- Governance Score Card - Always third -->
+                <div class="bg-gray-50 p-5 rounded-lg shadow-sm flex flex-col items-center text-center">
+                    <div class="text-purple-600 mb-3">
+                        <!-- Governance Icon (Building/Structure) -->
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-4-4h1m-1-4h1m-1 4h1m-1 4h1m-4-4h1m-1-4h1m-1 4h1"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">Governance</h3>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <span class="px-3 py-1 rounded-full text-white font-bold text-lg score-badge-yellow">
+                            65/100
+                        </span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                        <div class="progress-bar-yellow h-2.5 rounded-full" style="width: 65%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Adequate corporate structure and transparency.</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Score Legend Section -->
+        <section class="bg-white shadow-lg rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Score Interpretation</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                <div class="flex flex-col items-center">
+                    <span class="px-4 py-2 rounded-full text-white font-bold score-badge-green mb-2"></span>
+                    <p class="text-lg font-semibold text-gray-800">Excellent</p>
+                    <p class="text-sm text-gray-600">80 - 100</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="px-4 py-2 rounded-full text-white font-bold score-badge-yellow mb-2"></span>
+                    <p class="text-lg font-semibold text-gray-800">Moderate</p>
+                    <p class="text-sm text-gray-600">60 - 79</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="px-4 py-2 rounded-full text-white font-bold score-badge-red mb-2"></span>
+                    <p class="text-lg font-semibold text-gray-800">Needs Improvement</p>
+                    <p class="text-sm text-gray-600">Below 60</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Summary Section -->
+        <section class="bg-white shadow-lg rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">AI Summary</h2>
+            <div class="bg-blue-50 p-5 rounded-lg text-gray-700 leading-relaxed">
+                <p>GreenGrow Agri Supply demonstrates a commendable commitment to environmental sustainability, evident in its high environmental score. Their social initiatives show promise, with efforts in community engagement and fair labor practices. While their governance structure is sound, there's potential for further enhancement in board diversity and shareholder rights to achieve a more robust overall ESG profile. The AI model highlights their innovative waste reduction programs as a key strength.</p>
+            </div>
+        </section>
+
+        <!-- Sources & Mentions Section -->
+        <section class="bg-white shadow-lg rounded-xl p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Sources & Mentions</h2>
+            <div class="grid grid-cols-1 gap-4" id="sources-list">
+                <!-- Source Card 1 -->
+                <div class="source-card relative bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex items-start justify-between">
+                    <a href="#" target="_blank" class="flex-grow flex items-start">
+                        <svg class="w-5 h-5 text-gray-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-700 hover:underline">GreenGrow's Sustainable Farming Initiatives</h3>
+                            <p class="text-sm text-gray-600 mb-1">Source: Inquirer.net</p>
+                            <p class="text-sm text-gray-500 line-clamp-2">An article detailing GreenGrow Agri Supply's innovative approaches to sustainable agriculture and their positive impact on local ecosystems.</p>
+                        </div>
+                    </a>
+                    <!-- Score Breakdown for Source 1 -->
+                    <div class="score-breakdown">
+                        <div class="flex items-center text-sm text-gray-700 mb-1">
+                            <svg class="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>+16</span>
+                        </div>
+                    </div>
+                    <button class="trash-icon ml-4 p-2 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" onclick="removeSource(this)">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Source Card 2 -->
+                <div class="source-card relative bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex items-start justify-between">
+                    <a href="#" target="_blank" class="flex-grow flex items-start">
+                        <svg class="w-5 h-5 text-gray-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-700 hover:underline">Community Outreach Programs by GreenGrow</h3>
+                            <p class="text-sm text-gray-600 mb-1">Source: PhilStar Global</p>
+                            <p class="text-sm text-gray-500 line-clamp-2">Report on GreenGrow's successful community engagement projects, including farmer training and local employment opportunities.</p>
+                        </div>
+                    </a>
+                    <!-- Score Breakdown for Source 2 -->
+                    <div class="score-breakdown">
+                        <div class="flex items-center text-sm text-gray-700 mb-1">
+                            <svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h-5v-2a3 3 0 013-3h2a3 3 0 013 3v2h-5zm-3-12a4 4 0 11-8 0 4 4 0 018 0zM12 14c-1.558 0-2.887.893-3.568 2.193M20 10a4 4 0 100-8 4 4 0 000 8z"></path></svg>
+                            <span>+10</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-700">
+                            <svg class="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>+5</span>
+                        </div>
+                    </div>
+                    <button class="trash-icon ml-4 p-2 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" onclick="removeSource(this)">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Source Card 3 -->
+                <div class="source-card relative bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex items-start justify-between">
+                    <a href="#" target="_blank" class="flex-grow flex items-start">
+                        <svg class="w-5 h-5 text-gray-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-700 hover:underline">GreenGrow's Annual Sustainability Report</h3>
+                            <p class="text-sm text-gray-600 mb-1">Source: Company Website</p>
+                            <p class="text-sm text-gray-500 line-clamp-2">Summary of the key findings from GreenGrow's latest sustainability report, highlighting their ESG performance metrics.</p>
+                        </div>
+                    </a>
+                    <!-- Score Breakdown for Source 3 -->
+                    <div class="score-breakdown">
+                        <div class="flex items-center text-sm text-gray-700 mb-1">
+                            <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-4-4h1m-1-4h1m-1 4h1m-1 4h1m-4-4h1m-1-4h1m-1 4h1"></path></svg>
+                            <span>+8</span>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-700">
+                            <svg class="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>+3</span>
+                        </div>
+                    </div>
+                    <button class="trash-icon ml-4 p-2 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" onclick="removeSource(this)">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Source Card 4 -->
+                <div class="source-card relative bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex items-start justify-between">
+                    <a href="#" target="_blank" class="flex-grow flex items-start">
+                        <svg class="w-5 h-5 text-gray-500 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        <div>
+                            <h3 class="text-lg font-semibold text-blue-700 hover:underline">Analysis of Agri-Supply Chain ESG Risks</h3>
+                            <p class="text-sm text-gray-600 mb-1">Source: ESG Insights Journal</p>
+                            <p class="text-sm text-gray-500 line-clamp-2">Academic paper discussing common ESG risks in the agricultural supply chain, with mentions of leading companies like GreenGrow.</p>
+                        </div>
+                    </a>
+                    <!-- Score Breakdown for Source 4 -->
+                    <div class="score-breakdown">
+                        <div class="flex items-center text-sm text-gray-700 mb-1">
+                            <svg class="w-4 h-4 mr-1 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <span>-5</span>
+                        </div>
+                    </div>
+                    <button class="trash-icon ml-4 p-2 rounded-full hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50" onclick="removeSource(this)">
+                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons/Links -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+            <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors duration-200 w-full sm:w-auto">
+                Re-analyze
+            </button>
+            <a href="#" class="text-indigo-600 hover:text-indigo-800 font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                Back to SME Selection
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Function to remove a source card
+        function removeSource(buttonElement) {
+            const sourceCard = buttonElement.closest('.source-card');
+            if (sourceCard) {
+                sourceCard.remove(); // This removes the element from the DOM
+            }
+        }
+    </script>
+
+</body>
+</html>
