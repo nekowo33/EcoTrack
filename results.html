@@ -226,8 +226,8 @@
         }
 
         async function fetchESGData() {
-            const smeName = sessionStorage.getItem('smeName') || 'BPI'; // Default to BPI if not found
-            const businessType = 'Banking'; // Assuming a default business type as it's not input
+            const smeName = sessionStorage.getItem('smeName');
+            const businessType = sessionStorage.getItem('businessType');
 
             document.getElementById('smeNameDisplay').textContent = smeName;
             document.getElementById('loadingIndicator').classList.remove('hidden');
@@ -337,7 +337,8 @@
         function reAnalyze() {
             // Clear session storage item and go back to input screen
             sessionStorage.removeItem('smeName');
-            window.location.href = 'ecotrack-input-screen.html';
+            sessionStorage.removeItem('businessType');
+            window.location.href = 'index.html';
         }
 
         // Fetch data when the page loads
