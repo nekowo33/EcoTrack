@@ -116,25 +116,62 @@
 
     <script>
         function analyzeSME() {
-            const smeName = document.getElementById('smeNameInput').value.trim();
-            const businessType = document.getElementById('businessTypeSelect').value;
+            const smeNameInput = document.getElementById('smeNameInput');
+            const businessTypeSelect = document.getElementById('businessTypeSelect');
+            
+            const smeName = smeNameInput.value.trim();
+            const businessType = businessTypeSelect.value;
 
+            // Enhanced validation
             if (!smeName) {
                 alert('Please enter an SME name to analyze.');
+                smeNameInput.focus();
                 return;
             }
+            
+            // Validate SME name length and characters
+            if (smeName.length < 2) {
+                alert('SME name must be at least 2 characters long.');
+                smeNameInput.focus();
+                return;
+            }
+            
+            if (smeName.length > 100) {
+                alert('SME name must be less than 100 characters.');
+                smeNameInput.focus();
+                return;
+            }
+            
             if (!businessType) {
                 alert('Please select a business type.');
+                businessTypeSelect.focus();
                 return;
             }
 
-            // Store the SME name and business type in session storage
-            sessionStorage.setItem('smeName', smeName);
-            sessionStorage.setItem('businessType', businessType);
+            // Sanitize input data
+            const sanitizedSMEName = smeName.replace(/[<>]/g, ''); // Basic XSS prevention
+            
+            // Store the SME name and business type in session storage with timestamp
+            const analysisData = {
+                smeName: sanitizedSMEName,
+                businessType: businessType,
+                timestamp: new Date().toISOString()
+            };
+            
+            sessionStorage.setItem('esgAnalysisData', JSON.stringify(analysisData));
 
             // Redirect to the results page
             window.location.href = 'results.html';
         }
+        
+        // Allow Enter key to submit form
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('smeNameInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    analyzeSME();
+                }
+            });
+        });
     </script>
 
 </body>

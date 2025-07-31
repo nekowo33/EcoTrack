@@ -226,8 +226,61 @@
         }
 
         async function fetchESGData() {
-            const smeName = sessionStorage.getItem('smeName');
-            const businessType = sessionStorage.getItem('businessType');
+            // Enhanced data retrieval with validation
+            let smeName, businessType;
+            
+            try {
+                const analysisDataStr = sessionStorage.getItem('esgAnalysisData');
+                
+                if (!analysisDataStr) {
+                    // Fallback to old storage method for backward compatibility
+                    smeName = sessionStorage.getItem('smeName');
+                    businessType = sessionStorage.getItem('businessType');
+                    
+                    if (!smeName || !businessType) {
+                        throw new Error('No analysis data found. Please start a new analysis.');
+                    }
+                } else {
+                    const analysisData = JSON.parse(analysisDataStr);
+                    smeName = analysisData.smeName;
+                    businessType = analysisData.businessType;
+                    
+                    // Check if data is stale (older than 1 hour)
+                    const dataAge = new Date() - new Date(analysisData.timestamp);
+                    if (dataAge > 3600000) { // 1 hour in milliseconds
+                        console.warn('Analysis data is stale, but proceeding with analysis');
+                    }
+                }
+                
+                // Validate retrieved data
+                if (!smeName || !businessType) {
+                    throw new Error('Invalid analysis data. Please start a new analysis.');
+                }
+                
+                if (typeof smeName !== 'string' || typeof businessType !== 'string') {
+                    throw new Error('Corrupted analysis data. Please start a new analysis.');
+                }
+                
+                // Sanitize data before display and API call
+                const sanitizedSMEName = smeName.trim().replace(/[<>]/g, '');
+                
+                if (sanitizedSMEName.length < 2) {
+                    throw new Error('Invalid SME name. Please start a new analysis.');
+                }
+                
+            } catch (error) {
+                console.error('Data validation error:', error);
+                document.getElementById('smeNameDisplay').textContent = 'Error';
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-600 mb-4">${error.message}</p>
+                        <a href="index.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                            Start New Analysis
+                        </a>
+                    </div>
+                `;
+                return;
+            }
 
             document.getElementById('smeNameDisplay').textContent = smeName;
             document.getElementById('loadingIndicator').classList.remove('hidden');
@@ -235,24 +288,47 @@
 
             try {
                 const apiUrl = 'https://ecotrack-c9e6dad2a568.herokuapp.com/analyze';
+                
+                // Validate API URL
+                if (!apiUrl) {
+                    throw new Error('API endpoint not configured');
+                }
+                
                 const payload = {
-                    company_name: smeName,
+                    company_name: smeName.trim(),
                     business_type: businessType
                 };
+                
+                // Log request for debugging (remove in production)
+                console.log('API Request:', payload);
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    // Add timeout
+                    signal: AbortSignal.timeout(30000) // 30 second timeout
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorText = await response.text();
+                    throw new Error(`API error (${response.status}): ${errorText || response.statusText}`);
                 }
 
                 const data = await response.json();
+                
+                // Validate API response structure
+                if (!data || typeof data !== 'object') {
+                    throw new Error('Invalid API response format');
+                }
+                
+                if (!data.company || !data.esg_scores || !data.summary) {
+                    throw new Error('Incomplete API response data');
+                }
+                
                 console.log('API Response:', data); // Log the response for debugging
 
                 // Populate Hero Section
@@ -325,9 +401,41 @@
 
             } catch (error) {
                 console.error('Error fetching ESG data:', error);
-                // Display error message to user
-                document.getElementById('smeNameDisplay').textContent = 'Error loading data.';
-                document.getElementById('loadingIndicator').innerHTML = `<p class="text-red-600">Failed to load ESG data. Please try again later.</p>`;
+                
+                // Enhanced error display
+                document.getElementById('smeNameDisplay').textContent = 'Error loading data';
+                
+                let errorMessage = 'Failed to load ESG data.';
+                let actionButton = '';
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timed out. The server may be experiencing high load.';
+                } else if (error.message.includes('API error')) {
+                    errorMessage = 'Server error occurred while processing your request.';
+                } else if (error.message.includes('fetch')) {
+                    errorMessage = 'Network error. Please check your internet connection.';
+                } else {
+                    errorMessage = error.message || 'An unexpected error occurred.';
+                }
+                
+                actionButton = `
+                    <div class="mt-4 space-x-4">
+                        <button onclick="fetchESGData()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                            Try Again
+                        </button>
+                        <a href="index.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded inline-block">
+                            Start Over
+                        </a>
+                    </div>
+                `;
+                
+                document.getElementById('loadingIndicator').innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-600 mb-2">${errorMessage}</p>
+                        <p class="text-gray-600 text-sm mb-4">If the problem persists, please try again later.</p>
+                        ${actionButton}
+                    </div>
+                `;
             } finally {
                 document.getElementById('loadingIndicator').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
@@ -335,9 +443,10 @@
         }
 
         function reAnalyze() {
-            // Clear session storage item and go back to input screen
-            sessionStorage.removeItem('smeName');
-            sessionStorage.removeItem('businessType');
+            // Clear all session storage items related to ESG analysis
+            sessionStorage.removeItem('smeName'); // Legacy support
+            sessionStorage.removeItem('businessType'); // Legacy support
+            sessionStorage.removeItem('esgAnalysisData'); // New format
             window.location.href = 'index.html';
         }
 
