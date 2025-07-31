@@ -11,32 +11,131 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            /* Subtle gradient background */
-            background: linear-gradient(to bottom right, #e0e7ff, #c7d2fe); /* Light blue to lavender gradient */
+            /* More vibrant and subtle gradient background */
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 50%, #c3daed 100%); /* Softer, more professional gradient */
+            min-height: 100vh; /* Ensure it covers the full viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem; /* Consistent padding */
+        }
+        /* Custom styles for score badges based on score range - kept for consistency if this file were to display scores */
+        .score-badge-green {
+            background-color: #10b981; /* Tailwind green-500 */
+        }
+        .score-badge-yellow {
+            background-color: #f59e0b; /* Tailwind yellow-500 */
+        }
+        .score-badge-red {
+            background-color: #ef4444; /* Tailwind red-500 */
+        }
+
+        /* Custom styling for the select dropdown */
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-wrapper::after {
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="w-5 h-5 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>');
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Allows clicks to pass through to the select */
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .custom-select-wrapper select:focus + .custom-select-wrapper::after {
+            transform: translateY(-50%) rotate(180deg); /* Rotate arrow on focus */
+        }
+
+        .custom-select-wrapper select {
+            /* Remove default arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem; /* Make space for the custom arrow */
         }
     </style>
 </head>
-<body class="antialiased text-gray-800 flex items-center justify-center min-h-screen p-4">
+<body class="antialiased text-gray-800">
 
-    <div class="bg-white shadow-lg rounded-xl p-8 sm:p-10 lg:p-12 max-w-md w-full text-center transform transition-transform duration-300 hover:scale-105">
+    <div class="bg-white shadow-2xl rounded-2xl p-8 sm:p-10 lg:p-12 max-w-md w-full text-center transform transition-transform duration-300 hover:scale-105 border border-gray-100">
         <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">EcoTrack ESG Analyzer</h1>
         <p class="text-lg text-gray-600 mb-8">Start by entering a business to assess its ESG alignment.</p>
 
         <div class="mb-6">
             <input
                 type="text"
+                id="smeNameInput"
                 placeholder="Enter SME name..."
                 class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg transition-shadow duration-200 focus:shadow-lg"
             >
         </div>
 
+        <div class="mb-8">
+            <label for="businessTypeSelect" class="block text-left text-sm font-medium text-gray-700 mb-2">Select Business Type:</label>
+            <div class="custom-select-wrapper">
+                <select
+                    id="businessTypeSelect"
+                    class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-lg overflow-y-auto"
+                    style="max-height: 200px;"
+                >
+                    <option value="" disabled selected>Choose a business type...</option>
+                    <option value="Agriculture & Farming">Agriculture & Farming</option>
+                    <option value="Consulting & Professional Services">Consulting & Professional Services</option>
+                    <option value="Construction & Real Estate">Construction & Real Estate</option>
+                    <option value="Education & Training">Education & Training</option>
+                    <option value="Energy & Utilities">Energy & Utilities</option>
+                    <option value="Financial Services">Financial Services</option>
+                    <option value="Food & Beverage">Food & Beverage</option>
+                    <option value="Healthcare & Pharmaceuticals">Healthcare & Pharmaceuticals</option>
+                    <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+                    <option value="Information Technology (IT)">Information Technology (IT)</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Media & Entertainment">Media & Entertainment</option>
+                    <option value="Mining & Metals">Mining & Metals</option>
+                    <option value="Nonprofit & Social Enterprise">Nonprofit & Social Enterprise</option>
+                    <option value="Retail & E-commerce">Retail & E-commerce</option>
+                    <option value="Telecommunications">Telecommunications</option>
+                    <option value="Textiles & Apparel">Textiles & Apparel</option>
+                    <option value="Transportation & Logistics">Transportation & Logistics</option>
+                    <option value="Waste Management & Recycling">Waste Management & Recycling</option>
+                    <option value="Wholesale & Distribution">Wholesale & Distribution</option>
+                </select>
+            </div>
+        </div>
+
         <button
             class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-all duration-300 text-xl transform hover:-translate-y-1"
-            onclick="window.location.href='results.html'"
+            onclick="analyzeSME()"
         >
             Analyze ESG
         </button>
     </div>
+
+    <script>
+        function analyzeSME() {
+            const smeName = document.getElementById('smeNameInput').value.trim();
+            const businessType = document.getElementById('businessTypeSelect').value;
+
+            if (!smeName) {
+                alert('Please enter an SME name to analyze.');
+                return;
+            }
+            if (!businessType) {
+                alert('Please select a business type.');
+                return;
+            }
+
+            // Store the SME name and business type in session storage
+            sessionStorage.setItem('smeName', smeName);
+            sessionStorage.setItem('businessType', businessType);
+
+            // Redirect to the results page
+            window.location.href = 'results.html';
+        }
+    </script>
 
 </body>
 </html>
