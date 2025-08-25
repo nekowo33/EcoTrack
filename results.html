@@ -309,8 +309,6 @@
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify(payload),
-                    // Add timeout
-                    signal: AbortSignal.timeout(30000) // 30 second timeout
                 });
 
                 if (!response.ok) {
